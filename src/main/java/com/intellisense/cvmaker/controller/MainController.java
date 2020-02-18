@@ -22,17 +22,28 @@ import java.util.Map;
 import java.util.UUID;
 
 @Controller
-public class RegisterController {
+public class MainController {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserService userService;
     private EmailService emailService;
 
     @Autowired
-    public RegisterController(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, EmailService emailService) {
+    public MainController(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, EmailService emailService) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
         this.emailService = emailService;
+    }
+
+    // Return index page
+    public String showHomePage(){
+        return "index";
+    }
+
+    // Return login page
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String showLoginPage(){
+        return "login";
     }
 
     // Return registration form template
@@ -44,6 +55,7 @@ public class RegisterController {
     }
 
     // process form input data
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView processRegistrationForm(ModelAndView modelAndView, @Valid User user, BindingResult bindingResult, HttpServletRequest httpRequest) {
 
         // Lookup user in database by email
@@ -67,15 +79,16 @@ public class RegisterController {
 
            // Genearate random 36 character string token for confirmation link
            user.setConfirmationToken(UUID.randomUUID().toString());
-
+           // save user
            userService.saveUser(user);
 
-           String appUrl = httpRequest.getScheme() + "://" + httpRequest.getServerName();
+           String appUrl = httpRequest.getScheme() + "://" + httpRequest.getServerName() + ":" +httpRequest.getServerPort();
+
            SimpleMailMessage registrationEmail = new SimpleMailMessage();
            registrationEmail.setTo(user.getEmail());
            registrationEmail.setSubject("Registration Confirmation");
-           registrationEmail.setText("To confirm your e-mail address, please click the link below:\\n\"\n" +
-                   "\t\t\t\t\t+ appUrl + \"/confirm?token=\" + user.getConfirmationToken()");
+           registrationEmail.setText("To confirm your e-mail address, please click the link below:\n"
+                   + appUrl + "/confirm?token=" + user.getConfirmationToken());
            registrationEmail.setFrom("noreply@domain.com");
 
            emailService.sendMail(registrationEmail);

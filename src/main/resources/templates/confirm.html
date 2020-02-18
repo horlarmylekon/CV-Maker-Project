@@ -11,90 +11,82 @@
 
     <title>User Registration with Spring Boot</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-          crossorigin="anonymous" />
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 
-    <link th:href="@{css/style.css}" rel="stylesheet" />
-    <link th:href="@{css/fv.css}" rel="stylesheet" />
+    <!-- Custom Fonts -->
+    <link th:href="@{vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <link th:href="@{vendor/simple-line-icons/css/simple-line-icons.css}" rel="stylesheet">
+
+
+    <link th:href="@{css/confirm.css}" rel="stylesheet" />
 </head>
 
-<body class="gray-bg">
+<body>
 
-<div class="middle-box text-center loginscreen animated fadeInDown">
-    <div>
+<div class="confirm">
 
-        <hr />
-        <h4>Set Your Password</h4>
+    <h3 class="text-center text-white pt-5">Set Your Password</h3>
 
-        <div th:if="${successMessage}" class="alert alert-success"
-             role="alert" th:text=${successMessage}></div>
+    <div class="container">
+        <div id="confirm-row" class="row justify-content-center align-items-center">
+            <div id="confirm-column" class="col-md-6">
+                <div id="confirm-box" class="col-md-12">
 
-        <div th:if="${errorMessage}" class="alert alert-danger"
-             role="alert" th:text=${errorMessage}></div>
+                    <form th:if="!${invalidToken}" class="m-t" id="confirm-form" role="form" action="#"
+                          th:object="${setPassword}" th:action="@{/confirm}" method="post">
 
-        <div th:if="${invalidToken}" class="alert alert-danger"
-             role="alert" th:text=${invalidToken}></div>
+                        <div th:if="${successMessage}" class="alert alert-success"
+                             role="alert" th:text=${successMessage}></div>
 
-        <form th:if="!${invalidToken}" class="m-t" id="passwordForm" role="form" action="#"
-              th:object="${setPassword}" th:action="@{/confirm}" method="post">
+                        <div th:if="${errorMessage}" class="alert alert-danger"
+                             role="alert" th:text=${errorMessage}></div>
 
-            <input type="hidden" name="token" th:value=${confirmationToken}  >
+                        <div th:if="${invalidToken}" class="alert alert-danger"
+                             role="alert" th:text=${invalidToken}></div>
 
-            <div class="form-group input-group">
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-lock"></span>
-          </span>
-                <input name="password" type="password" id="password"
-                       placeholder="Password" class="form-control" required />
-                <span class="glyphicon"
-                      aria-hidden="true"></span>
+                        <input type="hidden" name="token" th:value=${confirmationToken}>
+
+                        <div class="form-group input-group">
+                            <label for="password" class="text-info">Password:</label><br>
+                            <input name="password" type="password" id="password"
+                                   class="form-control" required />
+                            <span class="glyphicon"
+                                  aria-hidden="true"></span>
+                        </div>
+
+                        <div class="form-group input-group has-feedback">
+                            <label for="signup-password-confirm" class="text-info">Confirm Password:</label><br>
+                            <input type="password" class="form-control" id="signup-password-confirm" placeholder="Confirm Password" name="ConfirmPassword" data-fv-notempty="true"
+                                   data-fv-notempty-message="Please confirm password"
+                                   data-fv-identical="true"
+                                   data-fv-identical-field="password"
+                                   data-fv-identical-message="Both passwords must be identical" />
+
+                            <div class="help-block with-errors"></div>
+                        </div>
+
+
+
+                        <button type="submit"
+                                class="btn btn-primary block full-width m-b">Save
+                        </button>
+
+                    </form>
+                </div>
+
             </div>
-
-            <div class="form-group input-group has-feedback">
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-lock"></span>
-          </span>
-                <input type="password" class="form-control" id="signup-password-confirm" placeholder="Confirm Password" name="ConfirmPassword" data-fv-notempty="true"
-                       data-fv-notempty-message="Please confirm password"
-                       data-fv-identical="true"
-                       data-fv-identical-field="password"
-                       data-fv-identical-message="Both passwords must be identical" />
-
-                <div class="help-block with-errors"></div>
-            </div>
-
-
-
-            <button type="submit"
-                    class="btn btn-primary block full-width m-b">Save
-            </button>
-
-        </form>
-
-
+        </div>
     </div>
 </div>
-
-<!-- jQuery-->
-<script
-        src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
-<!-- Bootstrap -->
-<script
-        src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
+<!-- Bootstrap core JavaScript -->
+<script th:src="@{vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
 <!-- Bootstrap Validator plugin -->
-<script
-        src="//cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
-
-<script th:src="@{js/fv.min.js}"></script>
 <script>
     $(document).ready(function() {
         $('#passwordForm').formValidation({
@@ -163,8 +155,6 @@
             }
         });
     });
-</script>
-});
 </script>
 
 </body>
